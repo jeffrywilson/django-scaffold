@@ -1,0 +1,37 @@
+version: '2'
+
+services:
+  web:
+    build: ./
+    container_name: scaffold_web
+    image: django_scaffold
+    command: bash -c "pip-sync ./requirements/local.txt && python ./project/manage.py migrate && python ./project/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./:/usr/src/scaffold/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./project/project/settings/.env
+    depends_on:
+      - scaffold_db
+    networks:
+      - scaffold
+
+  scaffold_db:
+    container_name: scaffold_postgres
+    image: 'postgres:12.2-alpine'
+    volumes:
+      - 'scaffold_pgdata:/var/lib/postgresql/data/'
+    env_file:
+      - ./project/project/settings/.env
+    ports:
+      - 5432:5432
+    networks:
+      - scaffold
+
+volumes:
+  scaffold_pgdata:
+
+networks:
+  scaffold:
+      driver: bridge

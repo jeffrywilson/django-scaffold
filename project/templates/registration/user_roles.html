@@ -1,0 +1,123 @@
+{% extends 'registration/_base_registration.html' %}
+
+
+{% block title %}Users Roles | Dashboard{% endblock %}
+
+
+{% block dashboard_content %}
+    <div class="container-fluid mt-80" id="dashboard-content">
+
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 ">
+
+                <div class="text-center mb-40">
+                    <div class="pull-right">
+                      <a href="{% url 'invite_users' %}" class="btn">+ User</a>
+                    </div>
+
+                    <h2 class="section-title text-uppercase">Users Roles</h2>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Email</th>
+                                <th class="text-center">Role</th>
+                                <th class="text-center">Administrator</th>
+                                <th class="text-center">Manager</th>
+                                <th class="text-center">Regular</th>
+                                <th class="text-center">Account</th>
+                                {% if user.is_superuser %}
+                                    <th class="text-center">Hijack</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user_inst in users %}
+                                {% if not user_inst.is_superuser or user.is_superuser %}
+                                    {% with u_man=user_inst.is_manager u_ad=user_inst.is_administrator u_su=user_inst.is_superuser %}
+                                    <tr>
+                                        <th scope="row">{{ user_inst.email }}</th>
+                                        <td>
+                                            {% if u_ad or u_su %}
+                                                Administrator
+                                            {% elif u_man %}
+                                                Manager
+                                            {% else %}
+                                                Regular
+                                            {% endif %}
+                                        </td>
+
+                                        {# A user can't change his own roles to prevent loss of privileges #}
+                                        <td class="text-center">
+                                            {% if u_ad or u_su or user_inst.id == user.id %}
+                                                <div class="waves-effect waves-light btn blue darken-4 disabled">
+                                                    <i class="fa fa-check-square-o white-icon" style="font-size: 20px"></i>
+                                                </div>
+                                            {% else %}
+                                                <a class="waves-effect waves-light btn grey lighten-1"
+                                                href="{% url 'change_user_role' user_inst.id 'admin' %}">
+                                                    <i class="fa fa-square-o" style="font-size: 20px"></i>
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if u_man or user_inst.id == user.id %}
+                                                <div class="waves-effect waves-light btn blue darken-4 disabled">
+                                                    <i class="fa fa-check-square-o white-icon" style="font-size: 20px"></i>
+                                                </div>
+                                            {% else %}
+                                                <a class="waves-effect waves-light btn grey lighten-1"
+                                                href="{% url 'change_user_role' user_inst.id 'manager' %}">
+                                                    <i class="fa fa-square-o" style="font-size: 20px"></i>
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% if not u_man and not u_ad and not u_su or user_inst.id == user.id %}
+                                                <div class="waves-effect waves-light btn blue darken-4 disabled">
+                                                    <i class="fa fa-check-square-o white-icon" style="font-size: 20px"></i>
+                                                </div>
+                                            {% else %}
+                                                <a class="waves-effect waves-light btn grey lighten-1"
+                                                href="{% url 'change_user_role' user_inst.id 'regular' %}">
+                                                    <i class="fa fa-square-o" style="font-size: 20px"></i>
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            {% with u_actv=user_inst.is_active  %}
+                                              {% if user_inst.id != user.id %}
+                                                <a class="waves-effect waves-light btn {% if u_actv %}red{% else %}green{% endif %}"
+                                                href="{% url 'toggle_account_status' user_inst.id %}">
+                                                    {% if u_actv %}
+                                                        Deactivate
+                                                    {% else %}
+                                                        Activate
+                                                    {% endif %}
+                                                </a>
+                                              {% endif %}
+                                            {% endwith %}
+                                        </td>
+                                        {% if user.is_superuser and user_inst.id != user.id %}
+                                        <td class="text-center">
+                                            <form action="/hijack/{{ user_inst.id }}/" method="post">
+                                                {% csrf_token %}
+                                                <button class="waves-effect waves-light btn amber accent-3" type="submit">
+                                                    <i class="fa fa-user-secret" style="font-size: 20px"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                        {% endif %}
+                                    </tr>
+                                    {% endwith %}
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock dashboard_content %}

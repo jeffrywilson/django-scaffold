@@ -1,0 +1,61 @@
+{% extends '_base_materialize.html' %}
+{% load static %}
+{% load bootstrap3 %}
+
+
+{% block css_files %}
+    {{ block.super }}
+    <link href="{% static 'Materialize/assets/css/shortcodes/login.css' %}" rel="stylesheet">
+    <style>
+      .lightbluebg { background-color: lightblue}
+    </style>
+{% endblock %}
+
+
+{% block top_navbar %}
+
+  <header id="header" class="tt-nav transparent-header">
+
+      <div class="header-sticky light-header">
+          <div class="container">
+              <div id="materialize-menu" class="menuzord">
+                  <!--logo start-->
+                  <a href="{% url 'home' %}" class="logo-brand" width="300px">
+                      <img src="{% static 'ideamakr/img/ideamaker_new_logo.png' %}" alt=""/>
+                  </a>
+                  <!--logo end-->
+
+                  <!--mega menu start-->
+                  <ul class="menuzord-menu pull-right">
+                      <li class="active"><a href="{% url 'home' %}">Home</a></li>
+                      {% if user.is_authenticated %}
+                          <li><a href="{% url 'account_logout' %}">Logout</a></li>
+                      {% else %}
+                          <li><a href="{% url 'account_login' %}">Login</a></li>
+                          <li><a href="{% url 'account_signup' %}">Signup</a></li>
+                      {% endif %}
+                  </ul>
+              </div>
+          </div>
+      </div>
+
+  </header>
+
+{% endblock %}
+
+
+{% block main_content %}
+
+    <section class="section-padding lightbluebg">
+        <div class="container">
+            <div class="login-wrapper">
+                <div class="card-wrapper"></div>
+                <div class="card-wrapper">
+                {% block account_forms %}{% endblock %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block footer %}{% endblock %}

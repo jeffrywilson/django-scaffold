@@ -1,0 +1,21 @@
+{% extends "account/_base_account.html" %}
+
+
+{% block account_forms %}
+
+    <h1 class="title">Verify Your Email Address</h1>
+    <form>
+        <div class="input-container">
+          <p>We have sent you an email for verification.</p>
+          <p> Follow the link provided to finalize the signup process. Contact us if you do not receive it
+            within a few minutes.</p>
+          <p>Please check your spam folder if you haven't received anything or contact us at</p>
+          <p class="text-center"><a>{{email_contact}}</a></p>
+          <!-- <p class="text-center"><a>info@example.com</a></p> -->
+        </div>
+        <div class="button-container">
+          <a class= "btn btn-primary form-control" href="{% url 'home' %}" > Done</a>
+        </div>
+    </form>
+
+{% endblock %}

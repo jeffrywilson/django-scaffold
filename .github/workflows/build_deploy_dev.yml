@@ -1,0 +1,91 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build and deploy - DEV
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the dev branch
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  
+  build:
+    
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: 1
+      PYTHONUNBUFFERED: 1
+      DJANGO_SETTINGS_MODULE: project.settings.ci_settings
+      SECRET_KEY: foo
+      DJANGO_ALLOW_ASYNC_UNSAFE: true
+      STRIPE_LIVE_MODE: false
+      STRIPE_TEST_PUBLIC_KEY: pk_test_cVAs0ZjGdDfTVUAi2aKg8wi800yQWSOWsa
+      STRIPE_TEST_SECRET_KEY: sk_test_fSEPeXQqbHLJkBCoEsehKeYs00I2TKVPIx
+      STRIPE_TEST_CLIENT_ID: ca_GwUJlKzGrr6BmClAs5d6UY9f43LfYXbT
+      DJSTRIPE_WEBHOOK_VALIDATION: retrieve_event
+      DJSTRIPE_WEBHOOK_SECRET: whsec
+      DJSTRIPE_WEBHOOK_EVENT_CALLBACK: project.celery.webhook_event_callback
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: scaffold_ci
+          POSTGRES_USER: ci_user
+          POSTGRES_PASSWORD: ci_user
+        ports:
+          - 5432:5432
+        #healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8.9
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8.9
+      - name: Intall prerequisites
+        run: |
+          sudo apt-get install python-dev libpq-dev  
+
+      - name: Install dependencies
+        run: |
+          python3 -m venv env
+          . env/bin/activate
+          pip install pip-tools
+          cp project/project/settings/.env-template .env
+          cd requirements/
+          pip-sync dev.txt
+          cd ../project/
+          python manage.py migrate
+          python manage.py check
+          
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  
+  #   steps:
+  #   - name: Deployng changes
+  #     uses: fifsky/ssh-action@master
+
+  #     with:
+  #       host: ${{ secrets.HOST }}
+  #       user: ${{ secrets.USER }}
+  #       key: ${{ secrets.PRIVATE_KEY }}
+  #       command: |
+  #         . /home/django/sites/${{ secrets.DNS_DEV_SERVER }}/dev/bin/activate
+  #         cd /usr/share/nginx/html/
+  #         sudo ln -sf /home/django/sites/${{ secrets.DNS_DEV_SERVER }}/src/project/templates/maintenance.html dev-maintenance.html
+  #         cd /home/django/sites/${{ secrets.DNS_DEV_SERVER }}/src/
+  #         git pull
+  #         cd /home/django/sites/${{ secrets.DNS_DEV_SERVER }}/src/requirements/
+  #         pip-sync dev.txt
+  #         cd /home/django/sites/${{ secrets.DNS_DEV_SERVER }}/src/project/
+  #         python manage.py migrate
+  #         python manage.py collectstatic --no-input
+  #         sudo systemctl restart ${{ secrets.DEV_SERVICE_NAME }}
+  #         cd /usr/share/nginx/html/
+  #         sudo unlink dev-maintenance.html

@@ -1,0 +1,60 @@
+{% extends '_base_materialize.html' %}
+{% load static %}
+
+
+{% block title %}Version{% endblock %}
+
+{% block main_content %}
+    <style>
+        table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        }
+        
+        td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+        }
+        
+        tr:nth-child(even) {
+        background-color: #dddddd;
+        }
+    </style>
+    <section class="section-padding">
+        
+    <div class="col-md-10 col-md-offset-1">
+        
+        <h1>Last 10 commits for {{repo_name}} branch</h1>
+        <table>   
+            <tr>
+                <th>
+                    Hash
+                </th>
+                <th>
+                    Autor
+                </th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Summary
+                </th>
+            </tr>
+            {% for c in commits %}
+            <tr>
+                <td>{{c.hexsha|slice:":6"}}</td>
+                <td>{{c.committer.name}}</td>
+                <td>{{c.committed_datetime|date:"m/d/Y H:i:s"}}</td>
+                <td>{{c.summary}}</td>
+
+            </tr>
+            {% endfor %}
+            
+        </table>
+
+    </div>
+    </section>
+
+{% endblock %}

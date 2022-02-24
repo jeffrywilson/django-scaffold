@@ -1,0 +1,27 @@
+{% extends 'account/_base_account.html' %}
+{% load static %}
+{% load bootstrap3 %}
+
+
+{% block account_forms %}
+<h1 class="title">Login</h1>
+<div class="row">
+  <div class="col s12">
+    <div style="padding:30px 30px 0;">
+      <form class="form-signin" action="" method="POST">
+        {% csrf_token %}
+        {% bootstrap_form_errors form %}
+        {% bootstrap_field form.login layout='inline' %}
+        {% bootstrap_field form.password layout='inline' %}
+        <div class="button-container">
+          <button type="submit" class="btn btn-block waves-effect waves-light">Login</button>
+          <p class="mt-10 text-center">First time here?</p>
+          <a href="{% url 'account_signup' %}" class="btn btn-block waves-effect waves-light red">Signup</a>
+        </div>
+        <div class="footer"><a href="{% url 'account_reset_password' %}">Forgot your password?</a></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

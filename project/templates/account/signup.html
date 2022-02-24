@@ -1,0 +1,31 @@
+{% extends 'account/_base_account.html' %}
+{% load static %}
+{% load bootstrap3 %}
+
+
+{% block account_forms %}
+
+    <h1 class="title">Signup</h1>
+    <form id="registration_form" class="form-signin" action="?next={%url 'account_email_verification_sent' %}" method="POST">
+      {% csrf_token %}
+      {% bootstrap_form_errors form error_types='all' %}
+
+      <div class="input-container">
+        {% bootstrap_field form.email layout='inline'%}
+        <div class="bar"></div>
+      </div>
+      <div class="input-container">
+        {% bootstrap_field form.password1 layout='inline' %}
+        <div class="bar"></div>
+      </div>
+      <div class="input-container">
+        {% bootstrap_field form.password2 layout='inline' %}
+        <div class="bar"></div>
+      </div>
+      <div class="button-container">
+        <button type="submit" class="btn btn-lg btn-block waves-effect waves-light">Signup</button>
+      </div>
+      <div class="footer"><a href="{% url 'account_login' %}">Already registered?</a></div>
+    </form>
+
+{% endblock %}

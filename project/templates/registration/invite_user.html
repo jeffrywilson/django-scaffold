@@ -1,0 +1,32 @@
+{% extends 'registration/_base_registration.html' %}
+{% load bootstrap3 %}
+
+{% block title %}Invite Users | Dashboard{% endblock %}
+
+
+{% block dashboard_content %}
+    <div class="container-fluid mt-80" id="dashboard-content">
+        <div class="text-center mb-40">
+            <h2 class="section-title text-uppercase">Invite a User</h2>
+            <p class="section-sub">Please fill the form with a valid email address belonging to the user you want to invite.</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <form method="POST">
+                    {% csrf_token %}
+                    {% bootstrap_form_errors form error_types='all' %}
+                    <div class="input-field">
+                        <label class="sr-only" for="email">Email</label>
+                        {{ form.email }}
+                        <label for="email" data-error="wrong" data-success="right" class="">Email (Required)</label>
+                    </div>
+                    <div class="row">
+                        <button type="submit" name="submit" class="waves-effect waves-light btn submit-button pink pull-right ml-20">Invite</button>
+                        <a href="{% url 'user_roles' %}"><button type="button" class="waves-effect waves-light btn orange pull-right">Cancel</button></a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock dashboard_content %}

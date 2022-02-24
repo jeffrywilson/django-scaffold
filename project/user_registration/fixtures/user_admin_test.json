@@ -1,0 +1,23 @@
+[
+{
+    "model": "user_registration.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$oQ7wutcBSLcHys78u44CKc$qqJBYzcqgz8wOmLfEiuJTs1WcpLhTyS6+ylfgldO4z4=",
+        "last_login": null,
+        "is_superuser": true,
+        "username": "tdkwon",
+        "first_name": "",
+        "last_name": "",
+        "email": "tdkwon@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2021-04-21T01:34:01.017Z",
+        "is_administrator": false,
+        "is_manager": false,
+        "phone": null,
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]

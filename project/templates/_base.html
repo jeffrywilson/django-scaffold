@@ -1,0 +1,53 @@
+{% load static %}
+{% load meta global_tags %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+{% get_setting "GOOGLE_TAG_MANAGER_ID" as GTM  %}
+
+<head {% meta_namespaces %}>
+    <title>{% block title %}Project Site{% endblock %}</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Thomas Kwon">
+    {% block meta-info %}
+    <meta name="description" content="My Django Scaffold Site">
+    {% endblock meta-info%}
+
+    {% include "meta/meta.html" %}
+
+    {% block css_files %}{% endblock css_files %}
+
+    {% block js_files %}{% endblock js_files %}
+</head>
+
+
+<body id="top">
+    <div class="small text-center" style="background: #42dcce; top: 0px;color: #000;"> {{ request.session.git_info }} </div>
+    {% block top_navbar %}{% endblock top_navbar %}
+
+    {% block left_sidebar %}{% endblock left_sidebar %}
+
+    {% block main_content %}{% endblock main_content %}
+
+    {% block footer %}{% endblock %}
+
+    {% block js_files_bottom %}{% endblock js_files_bottom %}
+
+    {% if GTM %}
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer', '{{ GTM }}');</script>
+        <!-- End Google Tag Manager -->
+    {% endif %}
+
+</body>
+
+</html>

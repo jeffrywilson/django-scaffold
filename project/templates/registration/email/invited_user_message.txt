@@ -1,0 +1,10 @@
+{% load i18n %}{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Hello from {{ site_name }}!
+
+You're receiving this e-mail because a manager from our site has created a user account for you and invited you to the site.
+To accept the invitation please click the link below to reset your password.{% endblocktrans %}
+
+{{ password_reset_url }}
+
+
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Thank you from {{ site_name }}!
+{{ site_domain }}{% endblocktrans %}
