@@ -57,12 +57,13 @@ Create a new Python environment virtualenv and install required Python packages 
 Synchronize the required libs using pip tools
 
     source <venv_path>/bin/activate
+    python -m pip install --upgrade pip
     pip install pip-tools
     pip-sync requirements/local.txt
 
 Configure the application by copying `env-template` file to `.env` and modifying it as needed:
 
-    cp project/project/settings/env-template project/project/settings/.env
+    cp project/project/settings/.env-template project/project/settings/.env
 
 Initialize the database by running Django migrations:
     

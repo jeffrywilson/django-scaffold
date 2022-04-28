@@ -107,7 +107,7 @@ idna==2.10
     # via
     #   -r requirements/base.txt
     #   requests
-importlib-metadata==4.0.0
+importlib-metadata==2.1.1
     # via -r requirements/base.txt
 inflection==0.5.1
     # via
